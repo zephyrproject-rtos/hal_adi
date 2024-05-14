@@ -87,7 +87,7 @@ static inline int Wrap_MXC_WDT_SelectClockSource(mxc_wdt_regs_t *wdt, uint32_t c
     defined(CONFIG_SOC_MAX32670) || defined(CONFIG_SOC_MAX32672) ||   \
     defined(CONFIG_SOC_MAX32662) || defined(CONFIG_SOC_MAX32675) ||   \
     defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX78002) ||   \
-    defined(CONFIG_SOC_MAX78000)
+    defined(CONFIG_SOC_MAX78000) || defined(CONFIG_SOC_MAX32657)
 
 #define WRAP_MXC_F_WDT_CTRL_EN MXC_F_WDT_CTRL_EN
 

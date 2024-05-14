@@ -62,7 +62,7 @@ static inline void Wrap_MXC_LP_EnterPowerDownMode(void)
  */
 #elif defined(CONFIG_SOC_MAX32690) || defined(CONFIG_SOC_MAX32655) || \
     defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX78002) ||   \
-    defined(CONFIG_SOC_MAX78000)
+    defined(CONFIG_SOC_MAX78000) || defined(CONFIG_SOC_MAX32657)
 
 static inline void Wrap_MXC_LP_EnterLowPowerMode(void)
 {

@@ -75,7 +75,8 @@ static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
     defined(CONFIG_SOC_MAX32670) || defined(CONFIG_SOC_MAX32672) ||   \
     defined(CONFIG_SOC_MAX32662) || defined(CONFIG_SOC_MAX32675) ||   \
     defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX32657) ||   \
-    defined(CONFIG_SOC_MAX78002) || defined(CONFIG_SOC_MAX78000) || defined(CONFIG_SOC_MAX32660)
+    defined(CONFIG_SOC_MAX78002) || defined(CONFIG_SOC_MAX78000) ||   \
+    defined(CONFIG_SOC_MAX32660) || defined(CONFIG_SOC_MAX32657)
 
 #if !defined(CONFIG_SOC_MAX32660)
 #define ADI_MAX32_CLK_IPO MXC_SYS_CLOCK_IPO
