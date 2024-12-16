@@ -140,7 +140,7 @@ zephyr_library_sources(
 )
 endif()
 
-if (CONFIG_SOC_FLASH_MAX32)
+if (CONFIG_SOC_FLASH_MAX32 OR CONFIG_HWINFO_MAX32)
 zephyr_library_sources(
     ${MSDK_PERIPH_SRC_DIR}/FLC/flc_common.c
     ${MSDK_PERIPH_SRC_DIR}/FLC/flc_me18.c
@@ -184,7 +184,7 @@ zephyr_library_sources(
 )
 endif()
 
-if (CONFIG_CRYPTO_MAX32)
+if (CONFIG_CRYPTO_MAX32 OR CONFIG_HWINFO_MAX32)
 zephyr_library_sources(
     ${MSDK_PERIPH_SRC_DIR}/CTB/ctb_me18.c
     ${MSDK_PERIPH_SRC_DIR}/CTB/ctb_reva.c
