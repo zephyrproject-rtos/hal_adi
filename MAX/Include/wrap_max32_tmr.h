@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright (C) 2023 Analog Devices, Inc.
+ * Copyright (C) 2023-2025 Analog Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,9 +101,11 @@ int Wrap_MXC_TMR_GetPendingInt(mxc_tmr_regs_t *tmr)
 /*
  *  MAX32690, MAX32655 related mapping
  */
-#elif defined(CONFIG_SOC_MAX32690) || (CONFIG_SOC_MAX32655) || (CONFIG_SOC_MAX32670) || \
-    (CONFIG_SOC_MAX32672) || (CONFIG_SOC_MAX32662) || (CONFIG_SOC_MAX32675) ||          \
-    (CONFIG_SOC_MAX32680) || (CONFIG_SOC_MAX78002)
+#elif defined(CONFIG_SOC_MAX32690) || defined(CONFIG_SOC_MAX32655) || \
+    defined(CONFIG_SOC_MAX32670) || defined(CONFIG_SOC_MAX32672) ||   \
+    defined(CONFIG_SOC_MAX32662) || defined(CONFIG_SOC_MAX32675) ||   \
+    defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX78002) ||   \
+    defined(CONFIG_SOC_MAX78000)
 
 #if defined(CONFIG_SOC_MAX32672) || (CONFIG_SOC_MAX32675)
 /* All timers are 32bits */
@@ -142,7 +144,7 @@ static inline int Wrap_MXC_TMR_GetClockIndex(int z_clock)
         return MXC_TMR_EXT_CLK;
     case 2: // ADI_MAX32_PRPH_CLK_SRC_IBRO
         return MXC_TMR_8M_CLK;
-#if !defined(CONFIG_SOC_MAX78002)
+#if !defined(CONFIG_SOC_MAX78002) && !defined(CONFIG_SOC_MAX78000)
     case 3: //ADI_MAX32_PRPH_CLK_SRC_ERFO
         return MXC_TMR_32M_CLK;
 #endif
@@ -150,7 +152,8 @@ static inline int Wrap_MXC_TMR_GetClockIndex(int z_clock)
         return MXC_TMR_32K_CLK;
     case 5: //ADI_MAX32_PRPH_CLK_SRC_INRO
         return MXC_TMR_INRO_CLK;
-#if defined(CONFIG_SOC_MAX32690) || (CONFIG_SOC_MAX78002)
+#if defined(CONFIG_SOC_MAX32655) || defined(CONFIG_SOC_MAX32680) || \
+    defined(CONFIG_SOC_MAX32690) || defined(CONFIG_SOC_MAX78002) || defined(CONFIG_SOC_MAX78000)
     case 6: //ADI_MAX32_PRPH_CLK_SRC_ISO
         return MXC_TMR_ISO_CLK;
 #endif
