@@ -68,6 +68,11 @@ static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
 #endif
 }
 
+static inline int Wrap_MXC_SYS_Select32KClockSource(int clock)
+{
+    return 0;
+}
+
 /*
  *  MAX32690, MAX32655 related mapping
  */
@@ -118,6 +123,36 @@ static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
     return MXC_SYS_GetUSN(usn, checksum);
 #endif
 }
+
+#if defined(CONFIG_SOC_MAX32657)
+static inline mxc_sys_32k_clock_t wrap_get_32k_clock_source_instance(uint8_t clock_source)
+{
+    mxc_sys_32k_clock_t clk_src;
+
+    switch (clock_source) {
+    case 4: // ADI_MAX32_PRPH_CLK_SRC_ERTCO
+        clk_src = MXC_SYS_32K_CLOCK_ERTCO;
+        break;
+    case 5: // ADI_MAX32_PRPH_CLK_SRC_INRO
+        clk_src = MXC_SYS_32K_CLOCK_INRO;
+        break;
+    default:
+        return -1;
+    }
+
+    return clk_src;
+}
+
+static inline int Wrap_MXC_SYS_Select32KClockSource(int clock)
+{
+    return MXC_SYS_Select32KClockSource(wrap_get_32k_clock_source_instance(clock));
+}
+#else
+static inline int Wrap_MXC_SYS_Select32KClockSource(int clock)
+{
+    return 0;
+}
+#endif
 
 #endif // part number
 
