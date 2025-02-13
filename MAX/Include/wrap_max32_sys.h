@@ -74,9 +74,10 @@ static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
 #elif defined(CONFIG_SOC_MAX32690) || defined(CONFIG_SOC_MAX32655) || \
     defined(CONFIG_SOC_MAX32670) || defined(CONFIG_SOC_MAX32672) ||   \
     defined(CONFIG_SOC_MAX32662) || defined(CONFIG_SOC_MAX32675) ||   \
-    defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX78002) ||   \
-    defined(CONFIG_SOC_MAX78000)
+    defined(CONFIG_SOC_MAX32680) || defined(CONFIG_SOC_MAX32657) ||   \
+    defined(CONFIG_SOC_MAX78002) || defined(CONFIG_SOC_MAX78000) || defined(CONFIG_SOC_MAX32660)
 
+#if !defined(CONFIG_SOC_MAX32660)
 #define ADI_MAX32_CLK_IPO MXC_SYS_CLOCK_IPO
 #if defined(CONFIG_SOC_MAX78002)
 #define ADI_MAX32_CLK_IPLL MXC_SYS_CLOCK_IPLL
@@ -92,6 +93,11 @@ static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
       (CONFIG_SOC_MAX32675))
 #define ADI_MAX32_CLK_ISO MXC_SYS_CLOCK_ISO
 #endif
+#else
+#define ADI_MAX32_CLK_IPO MXC_SYS_CLOCK_HIRC
+#define ADI_MAX32_CLK_INRO MXC_SYS_CLOCK_NANORING
+#define ADI_MAX32_CLK_ERTCO MXC_SYS_CLOCK_HFXIN
+#endif
 
 #define z_sysclk_prescaler(v) MXC_SYS_CLOCK_DIV_##v
 #define sysclk_prescaler(v) z_sysclk_prescaler(v)
@@ -103,9 +109,13 @@ static inline void Wrap_MXC_SYS_SetClockDiv(int div)
 
 static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
 {
+#if defined(CONFIG_SOC_MAX32660)
+    return MXC_SYS_GetUSN(usn, MXC_SYS_USN_LEN, 0);
+#else
     uint8_t checksum[MXC_SYS_USN_CHECKSUM_LEN];
 
     return MXC_SYS_GetUSN(usn, checksum);
+#endif
 }
 
 #endif // part number
