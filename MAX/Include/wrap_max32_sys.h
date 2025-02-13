@@ -58,6 +58,16 @@ static inline void Wrap_MXC_SYS_SetClockDiv(int div)
     MXC_SYS_Clock_Div((mxc_sys_system_div_t)div);
 }
 
+static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
+{
+#if defined(CONFIG_SOC_MAX32650)
+    return MXC_SYS_GetUSN(usn, MXC_SYS_USN_LEN);
+#else
+    uint8_t checksum[MXC_SYS_USN_CHECKSUM_LEN];
+    return MXC_SYS_GetUSN(usn, checksum);
+#endif
+}
+
 /*
  *  MAX32690, MAX32655 related mapping
  */
@@ -89,6 +99,13 @@ static inline void Wrap_MXC_SYS_SetClockDiv(int div)
 static inline void Wrap_MXC_SYS_SetClockDiv(int div)
 {
     MXC_SYS_SetClockDiv((mxc_sys_system_clock_div_t)div);
+}
+
+static inline int Wrap_MXC_SYS_GetUSN(uint8_t *usn)
+{
+    uint8_t checksum[MXC_SYS_USN_CHECKSUM_LEN];
+
+    return MXC_SYS_GetUSN(usn, checksum);
 }
 
 #endif // part number
