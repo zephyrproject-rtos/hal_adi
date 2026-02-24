@@ -1132,12 +1132,12 @@ int MXC_USB_ReadEndpoint(MXC_USB_Req_t *req)
     /* Select endpoint */
     MXC_USBHS->index = ep;
 
-    /* Since the OUT interrupt for EP 0 doesn't really exist, only do this logic for other endpoints */
+    /* EP0 and other endpoints have different status/count/int register sets */
     if (ep) {
         armed = 0;
 
         if (!armed) {
-            /* EP0 or no free DMA channel found, fall back to PIO */
+            /* No free DMA channel found, fall back to PIO */
 
             /* See if data already in FIFO for this EP */
             if (MXC_USBHS->outcsrl & MXC_F_USBHS_OUTCSRL_OUTPKTRDY) {
@@ -1169,6 +1169,37 @@ int MXC_USB_ReadEndpoint(MXC_USB_Req_t *req)
                 /* No data, will need an interrupt to service later */
                 MXC_USBHS->introuten |= (1 << ep);
             }
+        }
+    } else {
+        /* See if data already in FIFO for EP0 */
+        if (MXC_USBHS->csr0 & MXC_F_USBHS_CSR0_OUTPKTRDY) {
+            reqsize = MXC_USBHS->count0;
+            if (reqsize > (req->reqlen - req->actlen)) {
+                reqsize = (req->reqlen - req->actlen);
+            }
+
+            unload_fifo(&req->data[req->actlen], get_fifo_ptr(ep), reqsize);
+
+            req->actlen += reqsize;
+
+            /* Signal to H/W that FIFO has been read */
+            MXC_USBHS->csr0 |= MXC_F_USBHS_CSR0_SERV_OUTPKTRDY;
+            if ((req->type == MAXUSB_TYPE_PKT) || (req->actlen == req->reqlen)) {
+                /* Done with request, callback fires if configured */
+                MXC_SYS_Crit_Exit();
+                MXC_USB_Request[ep] = NULL;
+
+                if (req->callback) {
+                    req->callback(req->cbdata);
+                }
+                return 0;
+            } else {
+                /* Not done, more data requested */
+                MXC_USBHS->intrinen |= MXC_F_USBHS_INTRINEN_EP0_INT_EN;
+            }
+        } else {
+            /* No data, will need an interrupt to service later */
+            MXC_USBHS->intrinen |= MXC_F_USBHS_INTRINEN_EP0_INT_EN;
         }
     }
 
