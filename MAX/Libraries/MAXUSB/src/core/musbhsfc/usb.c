@@ -795,21 +795,19 @@ void MXC_USB_IrqHandler(maxusb_usbio_events_t *evt)
             aborted = 1;
         }
         /* Now, check for a SETUP packet */
-        if (!aborted) {
-            if ((setup_phase == SETUP_IDLE) && (MXC_USBHS->csr0 & MXC_F_USBHS_CSR0_OUTPKTRDY)) {
-                /* Flag that we got a SETUP packet */
-                evt->sudav = 1;
-                /* Remove this from the IN flags so that it is not erroneously processed as data */
+        if ((setup_phase == SETUP_IDLE) && (MXC_USBHS->csr0 & MXC_F_USBHS_CSR0_OUTPKTRDY)) {
+            /* Flag that we got a SETUP packet */
+            evt->sudav = 1;
+            /* Remove this from the IN flags so that it is not erroneously processed as data */
+            in_flags &= ~MXC_F_USBHS_INTRIN_EP0_IN_INT;
+        } else if (!aborted) {
+            /* Otherwise, we are in endpoint 0 data IN/OUT */
+            /* Fix interrupt flags so that OUTs are processed properly */
+            if (setup_phase == SETUP_DATA_OUT) {
                 in_flags &= ~MXC_F_USBHS_INTRIN_EP0_IN_INT;
-            } else {
-                /* Otherwise, we are in endpoint 0 data IN/OUT */
-                /* Fix interrupt flags so that OUTs are processed properly */
-                if (setup_phase == SETUP_DATA_OUT) {
-                    in_flags &= ~MXC_F_USBHS_INTRIN_EP0_IN_INT;
-                    out_flags |= MXC_F_USBHS_INTRIN_EP0_IN_INT;
-                }
-                /* SETUP_NODATA is silently ignored by event_in_data() right now.. could fix this later */
+                out_flags |= MXC_F_USBHS_INTRIN_EP0_IN_INT;
             }
+            /* SETUP_NODATA is silently ignored by event_in_data() right now.. could fix this later */
         }
     }
     /* do cleanup in cases of bus reset */
