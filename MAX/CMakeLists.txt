@@ -48,10 +48,13 @@ set(MSDK_PERIPH_INC_DIR  ${MSDK_PERIPH_DIR}/Include/${TARGET_UC})
 zephyr_include_directories(
     ./Include
     ./Source/${TARGET_UC}
-    ${MSDK_LIBRARY_DIR}/CMSIS/Include
     ${MSDK_CMSIS_DIR}/Include
     ${MSDK_PERIPH_INC_DIR}
 )
+
+if(CONFIG_RISCV)
+  zephyr_include_directories(${MSDK_LIBRARY_DIR}/CMSIS/Include)
+endif()
 
 if (CONFIG_UDC_MAX32)
     zephyr_compile_definitions(
