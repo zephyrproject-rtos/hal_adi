@@ -18,3 +18,4 @@
 
 
 add_subdirectory_ifdef(CONFIG_SOC_FAMILY_MAX32 MAX)
+add_subdirectory_ifdef(CONFIG_HAL_ADI_AD9081 AD9081)

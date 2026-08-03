@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config HAL_ADI_AD9081
+	bool "ADI AD9081/AD9082 MxFE vendor API"
+	help
+	  ADI's AD9081/AD9082 vendor API library (adi_api), ported
+	  verbatim from no-OS.
